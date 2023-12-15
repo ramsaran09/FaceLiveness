@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/uiTvCaptionOffline"
+        android:layout_marginTop="40dp"
+        android:text="Offline Facial Test"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/uiBtnSingleFace"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="13dp"
+        android:backgroundTint="#147AFC"
+        android:text="1 - 1 Face Comparison"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:theme="@style/Theme.MaterialComponents"
+        app:backgroundTint="#147AFC"
+        app:cornerRadius="24dp"
+        android:visibility="visible"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uiTvCaptionOffline" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/uiBtnTwoFace"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="13dp"
+        android:backgroundTint="#147AFC"
+        android:text="2 - 1 Face Comparison"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:theme="@style/Theme.MaterialComponents"
+        app:backgroundTint="#147AFC"
+        app:cornerRadius="24dp"
+        android:visibility="visible"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uiBtnSingleFace" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/uiBtnMultiFace"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="13dp"
+        android:backgroundTint="#147AFC"
+        android:text="Multi Face Comparison"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:theme="@style/Theme.MaterialComponents"
+        app:backgroundTint="#147AFC"
+        app:cornerRadius="24dp"
+        android:visibility="visible"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uiBtnTwoFace" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uiProgressbar"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

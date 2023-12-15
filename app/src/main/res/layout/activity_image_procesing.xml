@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/uiCvCapturedImage"
+        app:theme="@style/Theme.MaterialComponents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.57"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/white"
+        app:strokeWidth="6dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/uiIvCapturedImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            tools:src="@color/digi_blue"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/uiIvImageVerification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/uiTvProgressStatus"
+        app:layout_constraintEnd_toStartOf="@id/uiTvProgressStatus"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/uiTvProgressStatus"
+        tools:visibility="invisible"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/uiTvProgressStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:text="Authentication In-Progress"
+        android:textColor="@color/hint_text_color"
+        android:textDirection="locale"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/uiIvImageVerification"
+        app:layout_constraintTop_toBottomOf="@id/uiCvCapturedImage"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/uiBtnRetry"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="8dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:text="Try Again"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:theme="@style/Theme.MaterialComponents"
+        android:visibility="gone"
+        app:backgroundTint="@color/digi_blue"
+        app:cornerRadius="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/uiCvCapturedImage"
+        app:layout_constraintStart_toStartOf="@id/uiCvCapturedImage"
+        app:layout_constraintTop_toBottomOf="@id/uiTvProgressStatus"
+        app:layout_constraintWidth_percent="0.594"
+        tools:visibility="visible"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

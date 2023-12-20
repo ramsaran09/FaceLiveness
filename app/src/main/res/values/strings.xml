@@ -2,4 +2,9 @@
     <string name="app_name">Face Liveness</string>
     <string name="start_liveness">Start Livenesss</string>
     <string name="str_character_type_length">Character type &amp; length</string>
+    <string name="surprise_quiz_timer">%s Questions • Quiz Timer </string>
+    <string name="submited_successfully">Quiz\n  Submited Successfully </string>
+    <string name="your_answers_are_viewable">Your answers are viewable once the Quiz Ends </string>
+    <string name="close">Close</string>
+
 </resources>

@@ -159,6 +159,7 @@ fun ActivityExitAlertDialogue(
 
 @Composable
 fun AppTopBar(
+    title: String,
     onBack: () -> Unit,
     onScheduleClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
@@ -167,7 +168,7 @@ fun AppTopBar(
         backgroundColor = colorResource(id = R.color.digi_blue),
         title = {
             Text(
-                text = "Create New Quiz",
+                text = title,
                 color = Color.White,
             )
         },
@@ -211,6 +212,7 @@ fun OverflowMenu(
         Icon(
             imageVector = Icons.Outlined.MoreVert,
             contentDescription = "More Info",
+            tint = Color.White,
         )
     }
     DropdownMenu(

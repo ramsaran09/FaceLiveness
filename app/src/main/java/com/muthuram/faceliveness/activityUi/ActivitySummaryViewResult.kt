@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.models.ActivityDonutChartData
 import com.muthuram.faceliveness.models.ActivityDonutChartDataCollection
 import com.muthuram.faceliveness.models.DrawingAngles
@@ -352,7 +353,10 @@ fun ActivityViewResultTopBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = 150.dp)
+            .heightIn(
+                max = if (tabTitles.isEmpty()) 100.dp
+                    else 150.dp
+            )
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_bg_lecture),

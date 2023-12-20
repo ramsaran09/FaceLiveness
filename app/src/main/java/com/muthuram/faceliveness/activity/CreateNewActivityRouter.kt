@@ -12,7 +12,7 @@ fun CreateNewActivityRouter(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    CreateActivityScreen(
+    /*CreateActivityScreen(
         isLoading = uiState.isLoading,
         quizTitle = uiState.quizTitle ?: "",
         isBackDialog = uiState.isBackDialog,
@@ -21,5 +21,5 @@ fun CreateNewActivityRouter(
         onPublish = {},
         onEditClick = {},
         onPreviewClicked = {},
-    )
+    )*/
 }

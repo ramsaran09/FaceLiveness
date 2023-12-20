@@ -94,6 +94,7 @@ fun CreateActivityScreen(
                         }
                     }
                     AppTopBar(
+                        title = "Create New Quiz",
                         onBack = { saveAsDraft() },
                         onScheduleClicked = {},
                         onDeleteClicked = {},

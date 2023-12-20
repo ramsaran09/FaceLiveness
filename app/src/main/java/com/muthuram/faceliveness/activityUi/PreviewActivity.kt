@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -16,9 +17,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +52,14 @@ fun PreviewActivityScreenPreview() {
                 questionText = "what is newtons 3rd law?",
                 questionType = ActivityQuestionType.SHORT_ANSWER,
                 isMandatory = true,
-                optionUiModel = listOf()
+                optionUiModel = listOf(),
+                answerKeys = arrayListOf(
+                    "answer key 1",
+                    "answer key 2",
+                    "answer key 3",
+                    "answer key 4",
+                ),
+                questionTotalMark = 5,
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -63,20 +76,21 @@ fun PreviewActivityScreenPreview() {
                     OptionUiModel(
                         id = "",
                         optionText = "Kochi",
-                        isAnswer = true,
-                        isAnswered = true,
+                        isAnswer = false,
+                        isAnswered = false,
                     ),OptionUiModel(
                         id = "",
                         optionText = "Trichy",
-                        isAnswer = true,
-                        isAnswered = true,
+                        isAnswer = false,
+                        isAnswered = false,
                     ),OptionUiModel(
                         id = "",
                         optionText = "Madurai",
-                        isAnswer = true,
-                        isAnswered = true,
+                        isAnswer = false,
+                        isAnswered = false,
                     ),
-                )
+                ),
+                questionTotalMark = 5,
             ),
 
         ),
@@ -130,6 +144,8 @@ fun PreviewActivityScreen(
             ) {
                 PreviewQuizTitle(
                     quizTitle = quizTitle,
+                    isPreview = true,
+                    onPreviewClicked = {},
                 )
                 questions.forEach{ question ->
                     PreviewQuestionCard(
@@ -137,6 +153,9 @@ fun PreviewActivityScreen(
                         optionsUiModel = question.optionUiModel,
                         isMandatory = question.isMandatory,
                         questionType = question.questionType,
+                        isPreview = true,
+                        answerKeyList = question.answerKeys,
+                        questionTotalMark = question.questionTotalMark,
                     )
                 }
             }
@@ -156,19 +175,25 @@ data class ActivityQuestionsUiModel(
     val questionType : ActivityQuestionType,
     val optionUiModel: List<OptionUiModel>,
     val isMandatory : Boolean,
+    val answerKeys : ArrayList<String> = arrayListOf(),
+    val questionTotalMark : Int,
 )
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewQuizTitlePreview() {
     PreviewQuizTitle(
-        quizTitle = "Quiz for Anatomy Basics . L1,L2"
+        quizTitle = "Quiz for Anatomy Basics . L1,L2",
+        isPreview = false,
+        onPreviewClicked = {},
     )
 }
 
 @Composable
 fun PreviewQuizTitle(
     quizTitle : String,
+    isPreview : Boolean,
+    onPreviewClicked : () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -178,11 +203,26 @@ fun PreviewQuizTitle(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(
-            text = quizTitle,
-            color = Color.Black,
-            fontSize = 18.sp,
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = quizTitle,
+                color = Color.Black,
+                fontSize = 18.sp,
+            )
+            if (!isPreview) {
+                Icon(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .clickable { onPreviewClicked() },
+                    imageVector = Icons.Outlined.Visibility,
+                    contentDescription = "edit",
+                    tint = Color.Black.copy(0.5f)
+                )
+            }
+        }
     }
 }
 
@@ -246,6 +286,9 @@ fun PreviewQuestionCardPreview() {
         ),
         isMandatory = true,
         questionType = ActivityQuestionType.SHORT_ANSWER,
+        isPreview = false,
+        answerKeyList = listOf(),
+        questionTotalMark = 5,
     )
 }
 
@@ -255,6 +298,9 @@ fun PreviewQuestionCard(
     optionsUiModel : List<OptionUiModel>,
     isMandatory : Boolean,
     questionType: ActivityQuestionType,
+    isPreview : Boolean,
+    answerKeyList : List<String>,
+    questionTotalMark : Int,
 ) {
     Card(
         modifier = Modifier
@@ -287,6 +333,10 @@ fun PreviewQuestionCard(
             }
             when (questionType) {
                 ActivityQuestionType.MCQ -> {
+                    val radioButtonColors = RadioButtonDefaults.colors(
+                        selectedColor = colorResource(id = R.color.digi_blue),
+                        unselectedColor = colorResource(id = R.color.hint_color)
+                    )
                     optionsUiModel.forEach { option ->
                         Row(
                             modifier = Modifier
@@ -296,8 +346,9 @@ fun PreviewQuestionCard(
                         ) {
                             RadioButton(
                                 modifier = Modifier.offset((-12).dp),
-                                selected = false,
-                                onClick = {}
+                                selected = if (!isPreview) option.isAnswer else false,
+                                onClick = {},
+                                colors = radioButtonColors,
                             )
                             Text(
                                 text = option.optionText,
@@ -311,13 +362,68 @@ fun PreviewQuestionCard(
                 }
                 else -> {
                     Text(
-                        text = "Your Answer",
+                        text = if (isPreview) "Your Answer"
+                        else " Show Answer",
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.roboto_regular)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFF9CA3AF),
                     )
                     Divider()
+                    if (!isPreview) {
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        Text(
+                            text = "Answer Key ",
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                            fontWeight = FontWeight(500),
+                            color = Color(0xFF374151),
+                        )
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        answerKeyList.forEach { answerKey ->
+                            Text(
+                                text = answerKey,
+                                fontSize = 12.sp,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFF6B7280),
+                            )
+                        }
+                    }
+                }
+            }
+            if (!isPreview) {
+                Spacer(modifier = Modifier.padding(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = when (questionType) {
+                            ActivityQuestionType.MCQ -> "Multiple Choice"
+                            else -> "Short Answer"
+                        },
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF9CA3AF),
+                    )
+                    Text(
+                        text = "Mark :",
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF9CA3AF),
+                    )
+                    Text(
+                        text = questionTotalMark.toString(),
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF6B7280),
+                    )
                 }
             }
         }

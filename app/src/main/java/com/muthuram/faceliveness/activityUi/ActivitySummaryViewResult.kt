@@ -53,7 +53,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.MatchRowUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 import com.muthuram.faceliveness.models.ActivityDonutChartData
 import com.muthuram.faceliveness.models.ActivityDonutChartDataCollection
 import com.muthuram.faceliveness.models.DrawingAngles
@@ -171,6 +173,8 @@ fun ActivityResultSummaryScreenPreview() {
                     ),
                 ),
                 questionType = ActivityQuestionType.MCQ,
+                trueOrFalseUiModel = listOf(),
+                rowUiModel = listOf(),
             ),
             IndividualActivityResultUiModel(
                 id = "",
@@ -200,6 +204,8 @@ fun ActivityResultSummaryScreenPreview() {
                     ),
                 ),
                 questionType = ActivityQuestionType.MCQ,
+                trueOrFalseUiModel = listOf(),
+                rowUiModel = listOf(),
             ),
             IndividualActivityResultUiModel(
                 id = "",
@@ -209,7 +215,9 @@ fun ActivityResultSummaryScreenPreview() {
                 scoredMark = 5,
                 questionTotalMark = 5,
                 optionsUiModel = listOf(),
+                trueOrFalseUiModel = listOf(),
                 questionType = ActivityQuestionType.SHORT_ANSWER,
+                rowUiModel = listOf(),
             ),
             IndividualActivityResultUiModel(
                 id = "",
@@ -219,7 +227,9 @@ fun ActivityResultSummaryScreenPreview() {
                 scoredMark = 2,
                 questionTotalMark = 5,
                 optionsUiModel = listOf(),
+                trueOrFalseUiModel = listOf(),
                 questionType = ActivityQuestionType.SHORT_ANSWER,
+                rowUiModel = listOf(),
             ),
         )
     )
@@ -314,7 +324,9 @@ fun ActivityResultSummaryScreen(
                                     scoredMark = item.scoredMark,
                                     totalQuestionMark = item.questionTotalMark,
                                     optionsUiModel = item.optionsUiModel,
+                                    trueOrFalseUiModel = item.trueOrFalseUiModel,
                                     questionType = item.questionType,
+                                    rowUiModel = item.rowUiModel,
                                 )
                             }
                         }
@@ -534,7 +546,7 @@ fun ActivityViewResultQuestionCard(
                 color = Color(0xFF666666),
             )
             Spacer(modifier = Modifier.padding(8.dp))
-            if (questionType == ActivityQuestionType.MCQ) {
+            if (questionType != ActivityQuestionType.SHORT_ANSWER) {
                 MultipleChoiceAnswerPercentageView(
                     answeredOptionUiModel = answeredOptionUiModel,
                 )
@@ -633,6 +645,8 @@ data class IndividualActivityResultUiModel(
     val isCorrectlyAnswered: Boolean,
     val scoredMark: Int,
     val optionsUiModel: List<OptionUiModel>,
+    val trueOrFalseUiModel: List<TrueOrFalseUiModel>,
+    val rowUiModel: List<MatchRowUiModel>,
 )
 
 @Preview(showBackground = true)

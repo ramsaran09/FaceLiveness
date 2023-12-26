@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -50,7 +51,7 @@ fun CreateActivityScreen(
     onTotalMarkEntered: (String) -> Unit,
     onAnswerKeyAndFeedbackClicked: () -> Unit,
     onMandatoryChanged: (Boolean) -> Unit,
-    deleteOption: (Int, OptionUiModel) -> Unit,
+    deleteOption: (Int, Int) -> Unit,
     onOptionTextChanged: (Int, String) -> Unit,
     onSessionDropDownClicked: () -> Unit,
     onSLODropDownClicked: () -> Unit,
@@ -67,9 +68,12 @@ fun CreateActivityScreen(
     val scope = rememberCoroutineScope()
     val snackState = remember { SnackbarHostState() }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val isQuestionTypeChange = remember { mutableStateOf(false) }
     ModalBottomSheetLayout(
         sheetContent = {
+            if (isQuestionTypeChange.value) {
 
+            }
         },
         sheetState = sheetState,
         scrimColor = Color.Black.copy(alpha = 0.5f),
@@ -129,6 +133,7 @@ fun CreateActivityScreen(
                                         isAnswerKeySelected = item.isAnswerKeySelected,
                                         isMandatory = item.isMandatory,
                                         options = item.options,
+                                        trueOrFalseList = item.trueOrFalseUiModel,
                                         characterCount = item.characterCount,
                                         onDragHandleClicked = { /*TODO*/ },
                                         questionType = item.questionType,
@@ -137,8 +142,8 @@ fun CreateActivityScreen(
                                         onTotalMarkEntered = onTotalMarkEntered,
                                         onAnswerKeyAndFeedbackClicked = { /*TODO*/ },
                                         onMandatoryChanged = onMandatoryChanged,
-                                        deleteOption = {  _, optPosition ->
-                                            deleteOption(index, optPosition)
+                                        deleteOption = {
+                                            deleteOption(index,it)
                                         },
                                         onOptionTextChanged = {_,_ ->},
                                         onSessionDropDownClicked = { /*TODO*/ },
@@ -148,9 +153,12 @@ fun CreateActivityScreen(
                                         onCharacterCountEntered = {},
                                         onAddClicked = { /*TODO*/ },
                                         onCopyClicked = { /*TODO*/ },
-                                        onDeleteClicked = { /*TODO*/ }) {
-                                        
-                                    }
+                                        onDeleteClicked = { /*TODO*/ },
+                                        onMoreClicked = {},
+                                        onAddOptions = {},
+                                        rowUiModel = item.rowUiModel,
+                                        columnUiModel = item.columnUiModel,
+                                    )
                                     /*QuestionsItem(
                                         QuestionPos = index,
                                         questionItem = item,

@@ -24,6 +24,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -42,7 +44,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.DragHandle
@@ -72,7 +76,13 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.MatchColumnUiModel
+import com.muthuram.faceliveness.activity.MatchRowUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.OutcomeUiModel
+import com.muthuram.faceliveness.activity.SessionUiModel
+import com.muthuram.faceliveness.activity.TaxonomyUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
 @Composable
 fun ActivityExitAlertDialogue(
@@ -355,7 +365,9 @@ fun QuizGroupName(
             horizontalArrangement = Arrangement.Start,
         ) {
             Text(
-                modifier = Modifier.weight(1f).padding(start = 8.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp),
                 text = quizTitle,
                 color = Color.Black,
                 fontSize = 16.sp,
@@ -1424,6 +1436,63 @@ fun DoubleEqualUi() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun MatchAnswerViewPreview() {
+    MatchAnswerView(
+        color = 0xFFDCFCE7,
+        answerPosition = 1,
+        onChooseMatchAnswer = {},
+        isDropDownSelection = false
+    )
+}
+
+@Composable
+fun MatchAnswerView(
+    color : Long,
+    answerPosition : Int?,
+    onChooseMatchAnswer : () -> Unit,
+    isDropDownSelection : Boolean,
+) {
+    Row(
+        modifier = if (isDropDownSelection) {
+            Modifier
+                .border(
+                    width = 1.dp,
+                    color = Color(0xFFE5E7EB),
+                    shape = RoundedCornerShape(size = 4.dp)
+                )
+                .background(Color(color))
+                .padding(horizontal = 12.dp, vertical = 4.dp)
+        } else {
+               Modifier.background(
+                   color = Color(color),
+                   shape = RoundedCornerShape(size = 4.dp)
+               ).padding(horizontal = 16.dp, vertical = 4.dp)
+        }
+        ,
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = if (answerPosition == null) "--"
+            else (answerPosition + 97).toChar().uppercase(),
+            fontSize = 12.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            fontWeight = FontWeight(400),
+            color = Color(0xFF374151),
+        )
+        if (isDropDownSelection) {
+            IconButton(onClick = { onChooseMatchAnswer() }) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "arrow",
+                    tint = colorResource(id = R.color.grey_new)
+                )
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -1536,6 +1605,865 @@ fun ChooseAnswerForMCQ(
                     color = colorResource(id = R.color.digi_blue),
                 )
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectMatchingAnswerAlertDialogPreview() {
+    SelectMatchingAnswerAlertDialog(
+        columnUiModel = listOf(
+            MatchColumnUiModel(
+                id = "",
+                text = "TamilNadu",
+                questionPosition = null,
+            ),
+            MatchColumnUiModel(
+                id = "",
+                text = "Karnataka",
+                questionPosition = null,
+            ),MatchColumnUiModel(
+                id = "",
+                text = "Kerala",
+                questionPosition = null,
+            ),
+        ),
+        onAnswerSelected = {},
+    )
+}
+@Composable
+fun SelectMatchingAnswerAlertDialog(
+    columnUiModel: List<MatchColumnUiModel>,
+    onAnswerSelected : (Int) -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        backgroundColor = Color.White,
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                text = "Select Matching Answer",
+                fontSize = 14.sp,
+                fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                fontWeight = FontWeight(500),
+                color = Color(0xFF374151),
+            )
+            Divider()
+            columnUiModel.forEachIndexed { index, matchColumnUiModel ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onAnswerSelected(index) }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = (index + 97).toChar().uppercase(),
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFD1D5DB),
+                    )
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Text(
+                        text = matchColumnUiModel.text,
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF374151),
+                    )
+                }
+                Divider()
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ChooseAnswerForMatchPreview() {
+    ChooseAnswerForMatch(
+        questionText = "Differentiate active and passive transport mechanism across cell membrane",
+        rowUiModel = listOf(
+            MatchRowUiModel(
+                id ="",
+                text = "Chennai",
+                answerPosition = 2,
+            ),
+            MatchRowUiModel(
+                id ="",
+                text = "Bangalore",
+                answerPosition = 1,
+            ),
+            MatchRowUiModel(
+                id ="",
+                text = "Mumbai",
+                answerPosition = null,
+            ),
+        ),
+        onChooseAnswerForMatch  = {},
+        isNonEdit = true,
+        onEditClicked = {},
+    )
+}
+
+@Composable
+fun ChooseAnswerForMatch(
+    questionText : String,
+    rowUiModel: List<MatchRowUiModel>,
+    onChooseAnswerForMatch : (Int) -> Unit,
+    isNonEdit: Boolean,
+    onEditClicked: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = Color(0xFFF9FAFB),
+                )
+                .padding(4.dp),
+            text = questionText,
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            fontWeight = FontWeight(400),
+            color = Color(0xFF4B5563),
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        rowUiModel.forEachIndexed { index, matchRowUiModel ->
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = (index + 97).toChar().uppercase(),
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF374151),
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = matchRowUiModel.text,
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF374151),
+                )
+                MatchAnswerView(
+                    color = 0xFFFFFFFF,
+                    answerPosition = matchRowUiModel.answerPosition,
+                    onChooseMatchAnswer = {
+                        onChooseAnswerForMatch(index)
+                    },
+                    isDropDownSelection = true,
+                )
+            }
+        }
+        Spacer(modifier = Modifier.padding(4.dp))
+        if (isNonEdit) {
+            OutlinedButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                onClick = {
+                    onEditClicked()
+                },
+                shape = CircleShape,
+                border = BorderStroke(1.dp, colorResource(id = R.color.digi_blue)),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = colorResource(id = R.color.digi_blue)
+                )
+            ) {
+                Text(
+                    text = "Edit",
+                    color = colorResource(id = R.color.digi_blue),
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ChooseAnswerForTrueOrFalsePreview() {
+    ChooseAnswerForTrueOrFalse(
+        questionText = "Differentiate active and passive transport mechanism across cell membrane",
+        trueOrFalseList = listOf(
+            TrueOrFalseUiModel(
+                id = "",
+                text = "Option 1",
+                isAnswer = true,
+                isAnswered = true,
+            ),
+            TrueOrFalseUiModel(
+                id = "",
+                text = "Option 2",
+                isAnswer = false,
+                isAnswered = false,
+            ),
+        ),
+        onTrueOrFalseSelected = {_,_ ->},
+        isNonEdit = true,
+        onEditClicked = {},
+    )
+}
+@Composable
+fun ChooseAnswerForTrueOrFalse(
+    questionText : String,
+    trueOrFalseList: List<TrueOrFalseUiModel>,
+    onTrueOrFalseSelected: (Int, Boolean) -> Unit,
+    isNonEdit: Boolean,
+    onEditClicked: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = Color(0xFFF9FAFB),
+                )
+                .padding(4.dp),
+            text = questionText,
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            fontWeight = FontWeight(400),
+            color = Color(0xFF4B5563),
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        trueOrFalseList.forEachIndexed { index, trueOrFalseUiModel ->
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clickable {
+                        if (!trueOrFalseUiModel.isAnswer && !isNonEdit) {
+                            trueOrFalseUiModel.isAnswer = true
+                            onTrueOrFalseSelected(index, true)
+                        }
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                RadioButton(
+                    selected = trueOrFalseUiModel.isAnswer,
+                    onClick = {
+                        if (!trueOrFalseUiModel.isAnswer && !isNonEdit) {
+                            trueOrFalseUiModel.isAnswer = true
+                            onTrueOrFalseSelected(index, true)
+                        }
+                    }
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = trueOrFalseUiModel.text,
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF374151),
+                )
+            }
+        }
+        Spacer(modifier = Modifier.padding(4.dp))
+        if (isNonEdit) {
+            OutlinedButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                onClick = {
+                    onEditClicked()
+                },
+                shape = CircleShape,
+                border = BorderStroke(1.dp, colorResource(id = R.color.digi_blue)),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = colorResource(id = R.color.digi_blue)
+                )
+            ) {
+                Text(
+                    text = "Edit",
+                    color = colorResource(id = R.color.digi_blue),
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun QuestionTypeBottomSheetPreview() {
+    QuestionTypeBottomSheet(
+        questionTypeList = listOf(
+            "Short Answer",
+            "Multiple Choice"
+        ),
+        onCloseClicked = {},
+        onQuestionTypeSelected = {},
+        selectedQuestionType = 0,
+    )
+}
+
+@Composable
+fun QuestionTypeBottomSheet(
+    questionTypeList: List<String>,
+    selectedQuestionType: Int,
+    onCloseClicked: () -> Unit,
+    onQuestionTypeSelected: (Int) -> Unit,
+) {
+    Card(
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "Select Question Type",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF333333),
+                )
+                Icon(
+                    modifier = Modifier.clickable {
+                        onCloseClicked()
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "close",
+                    tint = Color(0xFF374151),
+                )
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            questionTypeList.forEachIndexed { index, questionType ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            if (index == selectedQuestionType) Color(0xFFEFF9FB)
+                            else Color.White
+                        )
+                        .clickable {
+                            onQuestionTypeSelected(index)
+                        }
+                        .padding(8.dp),
+                    elevation = 0.dp,
+                    backgroundColor = if (index == selectedQuestionType) Color(0xFFEFF9FB)
+                    else Color.White,
+                ) {
+                    Text(
+                        text = questionType,
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF374151),
+                    )
+                }
+            }
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun SelectCharacterLengthTypePreview() {
+    SelectCharacterLengthType(
+        characterLengthList = listOf(
+            "Maximum Character",
+            "Minimum Character"
+        ),
+        selectedLengthType = 0,
+        onCharacterLengthTypeSelected = {},
+        onCloseClicked = {},
+    )
+}
+
+@Composable
+fun SelectCharacterLengthType(
+    characterLengthList: List<String>,
+    selectedLengthType: Int,
+    onCharacterLengthTypeSelected: (Int) -> Unit,
+    onCloseClicked: () -> Unit,
+) {
+    Card(
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "Select Length Type",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF333333),
+                )
+                Icon(
+                    modifier = Modifier.clickable {
+                        onCloseClicked()
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "close",
+                    tint = Color(0xFF374151),
+                )
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            characterLengthList.forEachIndexed { index, questionType ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            if (index == selectedLengthType) Color(0xFFEFF9FB)
+                            else Color.White
+                        )
+                        .clickable {
+                            onCharacterLengthTypeSelected(index)
+                        }
+                        .padding(8.dp),
+                    elevation = 0.dp,
+                    backgroundColor = if (index == selectedLengthType) Color(0xFFEFF9FB)
+                    else Color.White,
+                ) {
+                    Text(
+                        text = questionType,
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF374151),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SelectSessionViewPreview() {
+    SelectSessionView(
+        sessionList = listOf(
+            SessionUiModel(
+                id = "",
+                isSelected = true,
+                sessionName = "Acid Base Indicators",
+                courseName = "Chemistry",
+                courseCode = "P12"
+            ),
+            SessionUiModel(
+                id = "",
+                isSelected = false,
+                sessionName = "Acid Base Indicators",
+                courseName = "Chemistry",
+                courseCode = "P12"
+            ),
+        ),
+        onCloseClicked = {},
+        onSessionSelected = {},
+    )
+}
+
+@Composable
+fun SelectSessionView(
+    sessionList: List<SessionUiModel>,
+    onCloseClicked: () -> Unit,
+    onSessionSelected: (Int) -> Unit,
+) {
+    Card(
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "Select Sessions",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF333333),
+                )
+                Icon(
+                    modifier = Modifier.clickable {
+                        onCloseClicked()
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "close",
+                    tint = Color(0xFF374151),
+                )
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            sessionList.forEachIndexed { index, session ->
+                Divider()
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            if (session.isSelected) Color(0xFFEFF9FB)
+                            else Color.White
+                        )
+                        .clickable {
+                            onSessionSelected(index)
+                        }
+                        .padding(8.dp),
+                    elevation = 0.dp,
+                    backgroundColor = if (session.isSelected) Color(0xFFEFF9FB)
+                    else Color.White,
+                ) {
+                    Column {
+
+                        Text(
+                            text = session.sessionName,
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                            fontWeight = FontWeight(500),
+                            color = Color(0xFF4B5563),
+                        )
+                        Text(
+                            text = "${session.courseCode} - ${session.courseName}",
+                            fontSize = 12.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFF666666),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SelectCloOutcomeViewPreview() {
+    SelectCloOutcomeView(
+        outcomeList = listOf(
+            OutcomeUiModel(
+                id = "",
+                cloName = "CLO 1.1",
+                description = "description of CLO 1.1",
+                isSelected = true,
+            ),
+            OutcomeUiModel(
+                id = "",
+                cloName = "CLO 1.2",
+                description = "description of CLO 1.2",
+                isSelected = false,
+            ),
+            OutcomeUiModel(
+                id = "",
+                cloName = "CLO 1.3",
+                description = "description of CLO 1.3",
+                isSelected = true,
+            )
+        ),
+        onCloseClicked = {},
+        onOutcomeSelected = { _, _ -> },
+    )
+}
+
+@Composable
+fun SelectCloOutcomeView(
+    outcomeList: List<OutcomeUiModel>,
+    onCloseClicked: () -> Unit,
+    onOutcomeSelected: (Int, Boolean) -> Unit,
+) {
+    val checkBoxColors = CheckboxDefaults.colors(
+        checkedColor = colorResource(id = R.color.digi_blue),
+        uncheckedColor = colorResource(id = R.color.digi_blue)
+    )
+    Card(
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "Select Outcome - CLO/SLO",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF333333),
+                )
+                Icon(
+                    modifier = Modifier.clickable {
+                        onCloseClicked()
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "close",
+                    tint = Color(0xFF374151),
+                )
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            outcomeList.forEachIndexed { index, outcomeUiModel ->
+                Divider()
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            if (outcomeUiModel.isSelected) Color(0xFFEFF9FB)
+                            else Color.White
+                        )
+                        .padding(8.dp),
+                    elevation = 0.dp,
+                    backgroundColor = if (outcomeUiModel.isSelected) Color(0xFFEFF9FB)
+                    else Color.White,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = outcomeUiModel.isSelected,
+                            onCheckedChange = {
+                                onOutcomeSelected(index, it)
+                            },
+                            colors = checkBoxColors,
+                        )
+                        Column {
+                            Text(
+                                text = outcomeUiModel.cloName,
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                                fontWeight = FontWeight(500),
+                                color = Color(0xFF4B5563),
+                            )
+                            Text(
+                                text = outcomeUiModel.description,
+                                fontSize = 12.sp,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFF666666),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SelectTaxonomyViewPreview() {
+    SelectTaxonomyView(
+        taxonomyList = listOf(
+            TaxonomyUiModel(
+                id = "",
+                name = "Recall",
+                isSelected = true,
+            ),
+            TaxonomyUiModel(
+                id = "",
+                name = "Application",
+                isSelected = false,
+            ),
+            TaxonomyUiModel(
+                id = "",
+                name = "Synthesis",
+                isSelected = true,
+            ),
+        ),
+        onCloseClicked = {},
+        onTaxonomySelected = { _, _ -> },
+    )
+}
+
+@Composable
+fun SelectTaxonomyView(
+    taxonomyList: List<TaxonomyUiModel>,
+    onCloseClicked: () -> Unit,
+    onTaxonomySelected: (Int, Boolean) -> Unit,
+) {
+    val checkBoxColors = CheckboxDefaults.colors(
+        checkedColor = colorResource(id = R.color.digi_blue),
+        uncheckedColor = colorResource(id = R.color.digi_blue)
+    )
+    Card(
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "Select Taxonomy",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF333333),
+                )
+                Icon(
+                    modifier = Modifier.clickable {
+                        onCloseClicked()
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "close",
+                    tint = Color(0xFF374151),
+                )
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            taxonomyList.forEachIndexed { index, taxonomy ->
+                Divider()
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            if (taxonomy.isSelected) Color(0xFFEFF9FB)
+                            else Color.White
+                        )
+                        .padding(8.dp),
+                    elevation = 0.dp,
+                    backgroundColor = if (taxonomy.isSelected) Color(0xFFEFF9FB)
+                    else Color.White,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = taxonomy.isSelected,
+                            onCheckedChange = {
+                                onTaxonomySelected(index, it)
+                            },
+                            colors = checkBoxColors,
+                        )
+                        Text(
+                            text = taxonomy.name,
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFF4B5563),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SelectQuestionDescriptionPreview() {
+    SelectQuestionDescription(
+        isDescriptionSelected = true,
+        onDescriptionSelected = {},
+        onCloseClicked = {},
+    )
+}
+
+@Composable
+fun SelectQuestionDescription(
+    isDescriptionSelected: Boolean,
+    onDescriptionSelected: (Boolean) -> Unit,
+    onCloseClicked: () -> Unit,
+) {
+    val checkBoxColors = CheckboxDefaults.colors(
+        checkedColor = colorResource(id = R.color.digi_blue),
+        uncheckedColor = colorResource(id = R.color.digi_blue)
+    )
+    Card(
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "Select Description",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF333333),
+                )
+                Icon(
+                    modifier = Modifier.clickable {
+                        onCloseClicked()
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "close",
+                    tint = Color(0xFF374151),
+                )
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Divider()
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                elevation = 0.dp,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Checkbox(
+                        checked = isDescriptionSelected,
+                        onCheckedChange = {
+                            onDescriptionSelected(it)
+                        },
+                        colors = checkBoxColors,
+                    )
+                    Text(
+                        text = "Description",
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF4B5563),
+                    )
+                }
+            }
+            Divider()
         }
     }
 }

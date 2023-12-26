@@ -60,7 +60,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.MatchColumnUiModel
+import com.muthuram.faceliveness.activity.MatchRowUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
 @Preview(showBackground = true)
 @Composable
@@ -82,7 +85,7 @@ fun ActivityItemCardPreview() {
         isMandatory = true,
         onAnswerKeyAndFeedbackClicked = {},
         onMandatoryChanged = {},
-        questionType = ActivityQuestionType.MCQ,
+        questionType = ActivityQuestionType.MATCH,
         options = listOf(
             OptionUiModel(
                 id = "",
@@ -96,14 +99,66 @@ fun ActivityItemCardPreview() {
                 isAnswer = false,
                 isAnswered = false,
             ),
-            OptionUiModel(
+        ),
+        trueOrFalseList = listOf(
+            TrueOrFalseUiModel(
                 id = "",
-                optionText = "Option 3",
+                text = "True",
+                isAnswer = true,
+                isAnswered = true,
+            ),
+            TrueOrFalseUiModel(
+                id = "",
+                text = "False",
                 isAnswer = false,
                 isAnswered = false,
             ),
         ),
-        deleteOption = { _, _ -> },
+        rowUiModel = listOf(
+            MatchRowUiModel(
+                id = "",
+                text = "Chennai",
+                answerPosition = null,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Mumbai",
+                answerPosition = null,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Bangalore",
+                answerPosition = null,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Kochi",
+                answerPosition = null,
+            ),
+        ),
+        columnUiModel = listOf(
+            MatchColumnUiModel(
+                id = "",
+                text = "TN",
+                questionPosition = null,
+            ),
+            MatchColumnUiModel(
+                id = "",
+                text = "Maharashtra",
+                questionPosition = null,
+            ),
+            MatchColumnUiModel(
+                id = "",
+                text = "Kerala",
+                questionPosition = null,
+            ),
+            MatchColumnUiModel(
+                id = "",
+                text = "Karantaka",
+                questionPosition = null,
+            ),
+        ),
+        deleteOption = {  },
         onOptionTextChanged = { _, _ -> },
         onSessionDropDownClicked = {},
         onSLODropDownClicked = {},
@@ -115,6 +170,7 @@ fun ActivityItemCardPreview() {
         onCopyClicked = {},
         onDeleteClicked = {},
         onMoreClicked = {},
+        onAddOptions = {},
     )
 }
 
@@ -131,6 +187,9 @@ fun ActivityItemCard(
     isAnswerKeySelected: Boolean,
     isMandatory: Boolean,
     options: List<OptionUiModel>,
+    trueOrFalseList: List<TrueOrFalseUiModel>,
+    rowUiModel: List<MatchRowUiModel>,
+    columnUiModel: List<MatchColumnUiModel>,
     characterCount: Int,
     onDragHandleClicked: () -> Unit,
     questionType: ActivityQuestionType,
@@ -139,7 +198,7 @@ fun ActivityItemCard(
     onTotalMarkEntered: (String) -> Unit,
     onAnswerKeyAndFeedbackClicked: () -> Unit,
     onMandatoryChanged: (Boolean) -> Unit,
-    deleteOption: (Int, OptionUiModel) -> Unit,
+    deleteOption: (Int) -> Unit,
     onOptionTextChanged: (Int, String) -> Unit,
     onSessionDropDownClicked: () -> Unit,
     onSLODropDownClicked: () -> Unit,
@@ -150,6 +209,7 @@ fun ActivityItemCard(
     onCopyClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onMoreClicked: () -> Unit,
+    onAddOptions: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -190,7 +250,57 @@ fun ActivityItemCard(
                         isMaximumCharacterSelected = isMaximumCharacterSelected,
                     )
                 }
-
+                ActivityQuestionType.TRUE_OR_FALSE -> {
+                    trueOrFalseList.forEach { trueOrFalseUiModel ->
+                        ActivityTrueOrFalseOptionView(
+                            text = trueOrFalseUiModel.text,
+                            isSelected = trueOrFalseUiModel.isAnswer,
+                            isEditable = false,
+                            onTrueOrFalseSelected = {},
+                        )
+                    }
+                }
+                ActivityQuestionType.MATCH -> {
+                    Text(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 4.dp),
+                        text = "Row",
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF374151),
+                    )
+                    rowUiModel.forEachIndexed { index, matchRowUiModel ->
+                        ActivityMatchOptionsAnswer(
+                            optionsPos = index,
+                            optionText = matchRowUiModel.text,
+                            deleteOption = deleteOption,
+                            onOptionTextChanged = onOptionTextChanged,
+                            isColumn = false,
+                        )
+                    }
+                    Text(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        text = "Column",
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF374151),
+                    )
+                    columnUiModel.forEachIndexed { index, matchColumnUiModel ->
+                        ActivityMatchOptionsAnswer(
+                            optionsPos = index,
+                            optionText = matchColumnUiModel.text,
+                            deleteOption = deleteOption,
+                            onOptionTextChanged = onOptionTextChanged,
+                            isColumn = true,
+                        )
+                    }
+                    AddOptionsView(
+                        onAddOptions = onAddOptions,
+                    )
+                }
                 else -> {
                     options.forEachIndexed { index, optionUiModel ->
                         ActivityAddOptionsAnswer(
@@ -200,6 +310,9 @@ fun ActivityItemCard(
                             onOptionTextChanged = onOptionTextChanged,
                         )
                     }
+                    AddOptionsView(
+                        onAddOptions = onAddOptions,
+                    )
                 }
             }
             EnterMarkCard(
@@ -268,7 +381,7 @@ fun QuestionTypeCard(
             Spacer(modifier = Modifier.padding(16.dp))
             Card(
                 shape = RoundedCornerShape(8.dp),
-                backgroundColor = Color.Transparent,
+                backgroundColor = Color(0XFFEFF9FB),
                 border = BorderStroke(
                     1.dp,
                     Color(0xFF4F46E5)
@@ -287,8 +400,12 @@ fun QuestionTypeCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = if (questionType == ActivityQuestionType.MCQ) "Multiple Choice"
-                        else "Short Answers",
+                        text = when (questionType) {
+                            ActivityQuestionType.MCQ -> "Multiple Choice"
+                            ActivityQuestionType.SHORT_ANSWER -> "Short Answers"
+                            ActivityQuestionType.MATCH -> "Matching"
+                            else -> "True Or False"
+                        },
                         fontWeight = FontWeight.Normal,
                         fontSize = 12.sp,
                         color = Color(0xFF4F46E5),
@@ -318,7 +435,7 @@ fun ActivityAddOptionsAnswerPreview() {
             isAnswer = false,
             isAnswered = true,
         ),
-        deleteOption = { _, _ -> },
+        deleteOption = { },
         onOptionTextChanged = { _, _ -> }
     )
 }
@@ -327,7 +444,7 @@ fun ActivityAddOptionsAnswerPreview() {
 fun ActivityAddOptionsAnswer(
     optionsPos: Int,
     optionItem: OptionUiModel,
-    deleteOption: (Int, OptionUiModel) -> Unit,
+    deleteOption: (Int) -> Unit,
     onOptionTextChanged: (Int, String) -> Unit,
 ) {
     val radioButtonColors = RadioButtonDefaults.colors(
@@ -370,7 +487,7 @@ fun ActivityAddOptionsAnswer(
             ),
         )
         IconButton(onClick = {
-            deleteOption(optionsPos, optionItem)
+            deleteOption(optionsPos)
         }) {
             Icon(
                 imageVector = Icons.Filled.Close,
@@ -588,7 +705,8 @@ fun TagItemCard(
         )
     ) {
         Row(
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier
+                .padding(start = 8.dp)
                 .clickable { onTagDropDownClicked() },
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
@@ -874,5 +992,158 @@ fun ActivityButtonsPreview() {
             text = "ADD FROM QUESTION BANK",
             onButtonClicked = {}
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ActivityMatchOptionsAnswerPreview() {
+    ActivityMatchOptionsAnswer(
+        optionsPos = 20,
+        isColumn  = false,
+        optionText  = "Chennai",
+        deleteOption = {},
+        onOptionTextChanged = {_,_ -> },
+    )
+}
+@Composable
+fun ActivityMatchOptionsAnswer(
+    optionsPos: Int,
+    isColumn : Boolean,
+    optionText : String,
+    deleteOption: (Int) -> Unit,
+    onOptionTextChanged: (Int, String) -> Unit,
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (isColumn) {
+            RadioButton(
+                selected = false,
+                onClick = {},
+            )
+        }
+        Text(
+            text = (optionsPos + 97).toChar().uppercase(),
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            fontWeight = FontWeight(400),
+            color = Color(0xFFD1D5DB),
+        )
+        TextField(
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color(0xFF374151),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                backgroundColor = Color.Transparent,
+                cursorColor = colorResource(R.color.digi_blue)
+            ),
+            modifier = Modifier
+                .weight(1f)
+                .background(Color.White),
+            value = optionText,
+            onValueChange = {
+                onOptionTextChanged(optionsPos, it)
+            },
+            placeholder = {
+                Text(
+                    text = "Option - ${optionsPos + 1}",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        color = Color(0xFF6B7280)
+                    )
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+        )
+        IconButton(onClick = {
+            deleteOption(optionsPos)
+        }) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = "close"
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AddOptionsViewPreview() {
+    AddOptionsView {}
+}
+@Composable
+fun AddOptionsView(
+    onAddOptions: () -> Unit
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable {
+                onAddOptions()
+            }
+            .padding(vertical = 4.dp, horizontal = 16.dp),
+        horizontalArrangement = Arrangement.Start,
+    ) {
+        Icon(
+            modifier = Modifier.size(24.dp),
+            imageVector = Icons.Default.Add,
+            contentDescription = "image description",
+            tint = colorResource(id = R.color.digi_blue),
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = 4.dp),
+            text = "Add Options",
+            fontSize = 16.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+            fontWeight = FontWeight(500),
+            color = colorResource(id = R.color.digi_blue),
+        )
+    }
+}
+@Preview
+@Composable
+fun ActivityTrueOrFalseOptionViewPreview() {
+    ActivityTrueOrFalseOptionView(
+        text = "True",
+        isSelected = true,
+        isEditable = true,
+        onTrueOrFalseSelected = {},
+    )
+}
+
+@Composable
+fun ActivityTrueOrFalseOptionView(
+    text: String,
+    isSelected: Boolean,
+    isEditable : Boolean,
+    onTrueOrFalseSelected : (Boolean) -> Unit,
+) {
+    val radioButtonColors = RadioButtonDefaults.colors(
+        selectedColor = colorResource(id = R.color.digi_blue),
+        unselectedColor = colorResource(id = R.color.hint_color)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        RadioButton(
+            colors = radioButtonColors,
+            selected = isSelected,
+            onClick = { if (isEditable) onTrueOrFalseSelected(!isSelected) },
+        )
+        Column {
+            Text(
+                text = text,
+                fontSize = 13.sp,
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                fontWeight = FontWeight(400),
+                color = Color(0xFF374151),
+            )
+            Divider(color = Color(0xFFF3F4F6))
+        }
     }
 }

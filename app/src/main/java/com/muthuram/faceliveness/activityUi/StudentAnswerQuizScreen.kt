@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -153,6 +154,20 @@ fun AnswerQuestionCardPreview() {
                 isAnswered = false,
             ),
         ),
+        trueOrFalseUiModel = listOf(
+            TrueOrFalseUiModel(
+                id = "",
+                text = "Option 1",
+                isAnswer = true,
+                isAnswered = true,
+            ),
+            TrueOrFalseUiModel(
+                id = "",
+                text = "Option 2",
+                isAnswer = false,
+                isAnswered = false,
+            ),
+        ),
         isMandatory = true,
         questionType = ActivityQuestionType.MCQ,
         questionTotalMark = 5,
@@ -168,6 +183,7 @@ fun AnswerQuestionCardPreview() {
 fun AnswerQuestionCard(
     questionText: String,
     optionsUiModel: List<OptionUiModel>,
+    trueOrFalseUiModel: List<TrueOrFalseUiModel>,
     isMandatory: Boolean,
     questionType: ActivityQuestionType,
     questionTotalMark: Int,
@@ -237,7 +253,36 @@ fun AnswerQuestionCard(
                         }
                     }
                 }
-
+                ActivityQuestionType.TRUE_OR_FALSE -> {
+                    val radioButtonColors = RadioButtonDefaults.colors(
+                        selectedColor = colorResource(id = R.color.digi_blue),
+                        unselectedColor = colorResource(id = R.color.hint_color)
+                    )
+                    trueOrFalseUiModel.forEach { option ->
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            RadioButton(
+                                modifier = Modifier.offset((-12).dp),
+                                selected = option.isAnswer,
+                                onClick = {
+                                    onOptionSelected(option.id)
+                                },
+                                colors = radioButtonColors,
+                            )
+                            Text(
+                                text = option.text,
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFF374151),
+                            )
+                        }
+                    }
+                }
                 else -> {
                     TextField(
                         modifier = Modifier.fillMaxWidth(),
@@ -289,6 +334,7 @@ fun AnswerQuestionCard(
                     modifier = Modifier.weight(1f),
                     text = when (questionType) {
                         ActivityQuestionType.MCQ -> "Multiple Choice"
+                        ActivityQuestionType.TRUE_OR_FALSE -> "True Or False"
                         else -> "Short Answer"
                     },
                     fontSize = 12.sp,

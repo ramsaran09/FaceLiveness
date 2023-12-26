@@ -37,7 +37,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.MatchRowUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
 @Preview(showBackground = true)
 @Composable
@@ -196,7 +198,9 @@ fun IndividualQuestionCardPreview() {
         scoredMark = 5,
         totalQuestionMark = 5,
         optionsUiModel = listOf(),
+        trueOrFalseUiModel = listOf(),
         questionType = ActivityQuestionType.SHORT_ANSWER,
+        rowUiModel = listOf(),
     )
 }
 
@@ -229,7 +233,43 @@ fun IndividualMCQQuestionCardPreview() {
                 isAnswered = false,
             ),
         ),
-        questionType = ActivityQuestionType.MCQ,
+        trueOrFalseUiModel = listOf(
+            TrueOrFalseUiModel(
+                id = "",
+                text = "True",
+                isAnswer = true,
+                isAnswered = true,
+            ),
+            TrueOrFalseUiModel(
+                id = "",
+                text = "False",
+                isAnswer = false,
+                isAnswered = false,
+            ),
+        ),
+        questionType = ActivityQuestionType.MATCH,
+        rowUiModel = listOf(
+            MatchRowUiModel(
+                id = "",
+                text = "Chennai is capital of which state in India",
+                answerPosition = 3,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Kochi",
+                answerPosition = 2,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Mumbai",
+                answerPosition = 1,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Bangalore",
+                answerPosition = 0,
+            ),
+        ),
     )
 }
 
@@ -241,6 +281,8 @@ fun IndividualQuestionCard(
     scoredMark: Int,
     totalQuestionMark: Int,
     optionsUiModel: List<OptionUiModel>,
+    trueOrFalseUiModel: List<TrueOrFalseUiModel>,
+    rowUiModel: List<MatchRowUiModel>,
     questionType: ActivityQuestionType,
 ) {
     Card(
@@ -269,7 +311,25 @@ fun IndividualQuestionCard(
                         )
                     }
                 }
-
+                ActivityQuestionType.TRUE_OR_FALSE -> {
+                    trueOrFalseUiModel.forEach { option ->
+                        MCQOptionResultView(
+                            isAnswered = option.isAnswered,
+                            isCorrectAnswer = option.isAnswer,
+                            optionText = option.text
+                        )
+                    }
+                }
+                ActivityQuestionType.MATCH -> {
+                    rowUiModel.forEachIndexed { index, matchRowUiModel ->
+                        MatchQuestionResultView(
+                            index = index,
+                            text = matchRowUiModel.text,
+                            isCorrectingAnswer = false,
+                            answerPosition = matchRowUiModel.answerPosition,
+                        )
+                    }
+                }
                 else -> {
                     Row(
                         modifier = Modifier
@@ -403,6 +463,55 @@ fun MCQOptionResultView(
             fontFamily = FontFamily(Font(R.font.roboto_regular)),
             fontWeight = FontWeight(400),
             color = Color(0xFF374151),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MatchQuestionResultViewPreview() {
+    MatchQuestionResultView(
+        index = 0,
+        text = "chennai",
+        answerPosition = 1,
+        isCorrectingAnswer = true,
+    )
+}
+@Composable
+fun MatchQuestionResultView(
+    index : Int,
+    text : String,
+    answerPosition : Int?,
+    isCorrectingAnswer : Boolean,
+) {
+    Row(
+        modifier = Modifier
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start,
+    ) {
+        Text(
+            text = (index + 97).toChar().uppercase(),
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            fontWeight = FontWeight(400),
+            color = Color(0xFF374151),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            modifier = Modifier.weight(1f),
+            text = text,
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            fontWeight = FontWeight(400),
+            color = Color(0xFF374151),
+        )
+        MatchAnswerView(
+            color = if (!isCorrectingAnswer) if (index % 2 == 0) 0xFFDCFCE7 else 0xFFFEE2E2
+            else 0xFFF3F4F6,
+            answerPosition = answerPosition,
+            onChooseMatchAnswer = {},
+            isDropDownSelection = false,
         )
     }
 }

@@ -47,7 +47,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.MatchRowUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -148,9 +150,9 @@ fun ActivityCorrectionQuestionCardPreview() {
         sessions = "L1",
         slo = "1.1",
         taxonomy = "Recall",
-        isAnswered = false,
+        isAnswered = true,
         answerText = "multi-universe in Loki web series was showing",
-        questionType = ActivityQuestionType.MCQ,
+        questionType = ActivityQuestionType.MATCH,
         optionsUiModel = listOf(
             OptionUiModel(
                 id = "",
@@ -169,6 +171,42 @@ fun ActivityCorrectionQuestionCardPreview() {
                 optionText = "Option 3",
                 isAnswer = false,
                 isAnswered = false,
+            ),
+        ),
+        trueOrFalseUiModel = listOf(
+            TrueOrFalseUiModel(
+                id = "",
+                text = "True",
+                isAnswer = true,
+                isAnswered = true,
+            ),
+            TrueOrFalseUiModel(
+                id = "",
+                text = "False",
+                isAnswer = false,
+                isAnswered = false,
+            ),
+        ),
+        rowUiModel = listOf(
+            MatchRowUiModel(
+                id = "",
+                text = "Chennai is capital of which state in India",
+                answerPosition = 0,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Kochi",
+                answerPosition = 1,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Mumbai",
+                answerPosition = 2,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Bangalore",
+                answerPosition = 3,
             ),
         ),
         isQuestionCorrected = true,
@@ -194,6 +232,8 @@ fun ActivityCorrectionQuestionCard(
     isQuestionCorrected: Boolean,
     questionTotalMark: Int,
     optionsUiModel: List<OptionUiModel>,
+    trueOrFalseUiModel: List<TrueOrFalseUiModel>,
+    rowUiModel: List<MatchRowUiModel>,
     onExpandChanged: (Boolean) -> Unit,
     onQuestionCorrected: (Boolean) -> Unit,
 ) {
@@ -271,7 +311,50 @@ fun ActivityCorrectionQuestionCard(
                         Divider()
                         Spacer(modifier = Modifier.padding(8.dp))
                     }
-
+                    ActivityQuestionType.TRUE_OR_FALSE -> {
+                        val radioButtonColors = RadioButtonDefaults.colors(
+                            selectedColor = Color(0xFF4B5563),
+                            unselectedColor = Color.Black,
+                        )
+                        trueOrFalseUiModel.forEach { option ->
+                            Row(
+                                modifier = Modifier
+                                    .padding(top = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                RadioButton(
+                                    modifier = Modifier.offset((-12).dp),
+                                    selected = option.isAnswer,
+                                    onClick = {},
+                                    colors = radioButtonColors,
+                                )
+                                Text(
+                                    text = option.text,
+                                    fontSize = 14.sp,
+                                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                                    fontWeight = FontWeight(400),
+                                    color = Color(0xFF374151),
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.padding(8.dp))
+                        Divider()
+                        Spacer(modifier = Modifier.padding(8.dp))
+                    }
+                    ActivityQuestionType.MATCH -> {
+                        rowUiModel.forEachIndexed { index, matchRowUiModel ->
+                            MatchQuestionResultView(
+                                index = index,
+                                isCorrectingAnswer = true,
+                                text = matchRowUiModel.text,
+                                answerPosition = matchRowUiModel.answerPosition,
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(8.dp))
+                        Divider()
+                        Spacer(modifier = Modifier.padding(8.dp))
+                    }
                     else -> {
                         if (answerText.isNotEmpty() && isAnswered) {
                             Text(
@@ -309,6 +392,8 @@ fun ActivityCorrectionQuestionCard(
                 Text(
                     text = when (questionType) {
                         ActivityQuestionType.SHORT_ANSWER -> "Short Answer Mark : "
+                        ActivityQuestionType.TRUE_OR_FALSE -> "True Or False Mark : "
+                        ActivityQuestionType.MATCH -> "Matching Mark : "
                         else -> "Multiple Choice Mark  : "
                     },
                     fontSize = 12.sp,

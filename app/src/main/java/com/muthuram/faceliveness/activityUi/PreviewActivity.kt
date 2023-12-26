@@ -2,6 +2,7 @@ package com.muthuram.faceliveness.activityUi
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -23,7 +29,6 @@ import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +43,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.MatchColumnUiModel
+import com.muthuram.faceliveness.activity.MatchRowUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
 @Preview(showBackground = true)
 @Composable
@@ -60,6 +68,9 @@ fun PreviewActivityScreenPreview() {
                     "answer key 4",
                 ),
                 questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(),
+                rowUiModel = listOf(),
+                columnUiModel = listOf(),
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -91,8 +102,85 @@ fun PreviewActivityScreenPreview() {
                     ),
                 ),
                 questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(),
+                rowUiModel = listOf(),
+                columnUiModel = listOf(),
             ),
-
+            ActivityQuestionsUiModel(
+                id = "",
+                questionText = "which of the following is capital of TamilNadu?",
+                questionType = ActivityQuestionType.TRUE_OR_FALSE,
+                isMandatory = true,
+                optionUiModel = listOf(),
+                questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(
+                    TrueOrFalseUiModel(
+                        id = "",
+                        text = "True",
+                        isAnswer = true,
+                        isAnswered = true,
+                    ),
+                    TrueOrFalseUiModel(
+                        id = "",
+                        text = "False",
+                        isAnswer = false,
+                        isAnswered = false,
+                    )
+                ),
+                rowUiModel = listOf(),
+                columnUiModel = listOf(),
+            ),
+            ActivityQuestionsUiModel(
+                id = "",
+                questionText = "which of the following is capital of TamilNadu?",
+                questionType = ActivityQuestionType.MATCH,
+                isMandatory = true,
+                optionUiModel = listOf(),
+                questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(),
+                rowUiModel = listOf(
+                    MatchRowUiModel(
+                        id = "",
+                        text = "Chennai is capital of which state in India",
+                        answerPosition = 0,
+                    ),
+                    MatchRowUiModel(
+                        id = "",
+                        text = "Kochi",
+                        answerPosition = 1,
+                    ),
+                    MatchRowUiModel(
+                        id = "",
+                        text = "Mumbai",
+                        answerPosition = 2,
+                    ),
+                    MatchRowUiModel(
+                        id = "",
+                        text = "Bangalore",
+                        answerPosition = 3,
+                    ),
+                ),
+                columnUiModel = listOf(
+                    MatchColumnUiModel(
+                        id = "",
+                        text = "TamilNadu is highest producer of paddy",
+                        questionPosition = 0,
+                    ),
+                    MatchColumnUiModel(
+                        id = "",
+                        text = "Kerala",
+                        questionPosition = 0,
+                    ),MatchColumnUiModel(
+                        id = "",
+                        text = "Maharashtra",
+                        questionPosition = 0,
+                    ),MatchColumnUiModel(
+                        id = "",
+                        text = "Karnataka",
+                        questionPosition = 0,
+                    ),
+                ),
+            ),
         ),
     )
 }
@@ -147,16 +235,21 @@ fun PreviewActivityScreen(
                     isPreview = true,
                     onPreviewClicked = {},
                 )
-                questions.forEach{ question ->
-                    PreviewQuestionCard(
-                        questionText = question.questionText,
-                        optionsUiModel = question.optionUiModel,
-                        isMandatory = question.isMandatory,
-                        questionType = question.questionType,
-                        isPreview = true,
-                        answerKeyList = question.answerKeys,
-                        questionTotalMark = question.questionTotalMark,
-                    )
+                LazyColumn {
+                    items(questions) { question ->
+                        PreviewQuestionCard(
+                            questionText = question.questionText,
+                            optionsUiModel = question.optionUiModel,
+                            trueOrFalseUiModel = question.trueOrFalseUiModel,
+                            rowUiModel = question.rowUiModel,
+                            columnUiModel = question.columnUiModel,
+                            isMandatory = question.isMandatory,
+                            questionType = question.questionType,
+                            isPreview = true,
+                            answerKeyList = question.answerKeys,
+                            questionTotalMark = question.questionTotalMark,
+                        )
+                    }
                 }
             }
 
@@ -167,6 +260,8 @@ fun PreviewActivityScreen(
 enum class ActivityQuestionType(val value : String){
     SHORT_ANSWER("Short Answer"),
     MCQ("Multiple Choice"),
+    TRUE_OR_FALSE("True Or False"),
+    MATCH("Match")
 }
 
 data class ActivityQuestionsUiModel(
@@ -174,6 +269,9 @@ data class ActivityQuestionsUiModel(
     val questionText : String,
     val questionType : ActivityQuestionType,
     val optionUiModel: List<OptionUiModel>,
+    val trueOrFalseUiModel: List<TrueOrFalseUiModel>,
+    val rowUiModel: List<MatchRowUiModel>,
+    val columnUiModel: List<MatchColumnUiModel>,
     val isMandatory : Boolean,
     val answerKeys : ArrayList<String> = arrayListOf(),
     val questionTotalMark : Int,
@@ -284,11 +382,27 @@ fun PreviewQuestionCardPreview() {
                 isAnswered = false,
             ),
         ),
+        trueOrFalseUiModel = listOf(
+            TrueOrFalseUiModel(
+                id = "",
+                text = "True",
+                isAnswer = true,
+                isAnswered = false,
+            ),
+            TrueOrFalseUiModel(
+                id = "",
+                text = "False",
+                isAnswer = false,
+                isAnswered = false,
+            ),
+        ),
         isMandatory = true,
         questionType = ActivityQuestionType.SHORT_ANSWER,
         isPreview = false,
         answerKeyList = listOf(),
         questionTotalMark = 5,
+        rowUiModel = listOf(),
+        columnUiModel = listOf(),
     )
 }
 
@@ -296,6 +410,9 @@ fun PreviewQuestionCardPreview() {
 fun PreviewQuestionCard(
     questionText: String,
     optionsUiModel : List<OptionUiModel>,
+    trueOrFalseUiModel : List<TrueOrFalseUiModel>,
+    rowUiModel: List<MatchRowUiModel>,
+    columnUiModel: List<MatchColumnUiModel>,
     isMandatory : Boolean,
     questionType: ActivityQuestionType,
     isPreview : Boolean,
@@ -360,6 +477,41 @@ fun PreviewQuestionCard(
                         }
                     }
                 }
+                ActivityQuestionType.TRUE_OR_FALSE -> {
+                    val radioButtonColors = RadioButtonDefaults.colors(
+                        selectedColor = colorResource(id = R.color.digi_blue),
+                        unselectedColor = colorResource(id = R.color.hint_color)
+                    )
+                    trueOrFalseUiModel.forEach { option ->
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            RadioButton(
+                                modifier = Modifier.offset((-12).dp),
+                                selected = if (!isPreview) option.isAnswer else false,
+                                onClick = {},
+                                colors = radioButtonColors,
+                            )
+                            Text(
+                                text = option.text,
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFF374151),
+                            )
+                        }
+                    }
+                }
+                ActivityQuestionType.MATCH -> {
+                    MatchingQuestionView(
+                        rowUiModel = rowUiModel,
+                        columnUiModel = columnUiModel,
+                        isPreview = true,
+                    )
+                }
                 else -> {
                     Text(
                         text = if (isPreview) "Your Answer"
@@ -403,6 +555,8 @@ fun PreviewQuestionCard(
                         modifier = Modifier.weight(1f),
                         text = when (questionType) {
                             ActivityQuestionType.MCQ -> "Multiple Choice"
+                            ActivityQuestionType.TRUE_OR_FALSE -> "True Or False"
+                            ActivityQuestionType.MATCH -> "Matching"
                             else -> "Short Answer"
                         },
                         fontSize = 12.sp,
@@ -424,6 +578,138 @@ fun PreviewQuestionCard(
                         fontWeight = FontWeight(400),
                         color = Color(0xFF6B7280),
                     )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MatchingQuestionViewPreview() {
+    MatchingQuestionView(
+        rowUiModel = listOf(
+            MatchRowUiModel(
+                id = "",
+                text = "Chennai is capital of which state in India",
+                answerPosition = 0,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Kochi",
+                answerPosition = 1,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Mumbai",
+                answerPosition = 2,
+            ),
+            MatchRowUiModel(
+                id = "",
+                text = "Bangalore",
+                answerPosition = 3,
+            ),
+
+
+        ),
+        columnUiModel = listOf(
+            MatchColumnUiModel(
+                id = "",
+                text = "TamilNadu is highest producer of paddy",
+                questionPosition = 0,
+            ),
+            MatchColumnUiModel(
+                id = "",
+                text = "Kerala",
+                questionPosition = 0,
+            ),MatchColumnUiModel(
+                id = "",
+                text = "Maharashtra",
+                questionPosition = 0,
+            ),MatchColumnUiModel(
+                id = "",
+                text = "Karnataka",
+                questionPosition = 0,
+            ),
+        ),
+        isPreview = true,
+    )
+}
+@Composable
+fun MatchingQuestionView(
+    rowUiModel: List<MatchRowUiModel>,
+    columnUiModel: List<MatchColumnUiModel>,
+    isPreview: Boolean,
+) {
+    val radioButtonColors = RadioButtonDefaults.colors(
+        selectedColor = colorResource(id = R.color.digi_blue),
+        unselectedColor = colorResource(id = R.color.hint_color)
+    )
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Spacer(modifier = Modifier.width(150.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(scrollState),
+            ) {
+                columnUiModel.forEach {
+                    Text(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .wrapContentHeight()
+                            .padding(4.dp),
+                        text = it.text,
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xDE000000),
+                    )
+                }
+            }
+        }
+        rowUiModel.forEachIndexed { _, matchRowUiModel ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(
+                        color = Color(0xFFF3F4F6),
+                        shape = RoundedCornerShape(size = 4.dp)
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .wrapContentHeight()
+                        .padding(4.dp),
+                    text = matchRowUiModel.text,
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF374151),
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState),
+                ) {
+                    columnUiModel.forEachIndexed { index, _ ->
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        RadioButton(
+                            modifier = Modifier
+                                .width(96.dp)
+                                .padding(vertical = 4.dp),
+                            colors = radioButtonColors,
+                            selected = if (!isPreview) matchRowUiModel.answerPosition == index
+                            else false,
+                            onClick = { },
+                        )
+                    }
                 }
             }
         }

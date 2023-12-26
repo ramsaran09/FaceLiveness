@@ -49,6 +49,9 @@ data class ActivityNewQuestionsUiModel(
     val isAnswerKeySelected: Boolean,
     val isMandatory: Boolean,
     val options: List<OptionUiModel>,
+    val trueOrFalseUiModel: List<TrueOrFalseUiModel>,
+    val rowUiModel: List<MatchRowUiModel>,
+    val columnUiModel: List<MatchColumnUiModel>,
     val characterCount: Int,
     val questionType: ActivityQuestionType,
 )
@@ -58,4 +61,44 @@ data class OptionUiModel(
     val optionText: String,
     var isAnswer: Boolean,
     val isAnswered : Boolean,
+)
+
+data class SessionUiModel(
+    val id: String,
+    val isSelected : Boolean,
+    val sessionName : String,
+    val courseName : String,
+    val courseCode : String,
+)
+
+data class OutcomeUiModel(
+    val id : String,
+    val cloName : String,
+    val isSelected : Boolean,
+    val description : String,
+)
+
+data class TaxonomyUiModel(
+    val id : String,
+    val name : String,
+    val isSelected : Boolean,
+)
+
+data class TrueOrFalseUiModel(
+    val id: String,
+    val text : String,
+    var isAnswer : Boolean,
+    val isAnswered : Boolean,
+)
+
+data class MatchRowUiModel(
+    val id : String,
+    val text : String,
+    val answerPosition : Int? = null,
+)
+
+data class MatchColumnUiModel(
+    val id : String,
+    val text : String,
+    val questionPosition : Int?,
 )

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -25,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.muthuram.faceliveness.R
 import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
 @Preview(showBackground = true)
 @Composable
@@ -46,6 +49,9 @@ fun StartActivityScreenPreview() {
                     "answer key 4",
                 ),
                 questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(),
+                rowUiModel = listOf(),
+                columnUiModel = listOf(),
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -79,9 +85,35 @@ fun StartActivityScreenPreview() {
                     ),
                 ),
                 questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(),
+                rowUiModel = listOf(),
+                columnUiModel = listOf(),
             ),
-
+            ActivityQuestionsUiModel(
+                id = "",
+                questionText = "which of the following is capital of TamilNadu?",
+                questionType = ActivityQuestionType.TRUE_OR_FALSE,
+                isMandatory = true,
+                optionUiModel = listOf(),
+                questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(
+                    TrueOrFalseUiModel(
+                        id = "",
+                        text = "True",
+                        isAnswer = false,
+                        isAnswered = true,
+                    ),
+                    TrueOrFalseUiModel(
+                        id = "",
+                        text = "False",
+                        isAnswer = true,
+                        isAnswered = false,
+                    ),
+                ),
+                rowUiModel = listOf(),
+                columnUiModel = listOf(),
             ),
+        ),
         onBackPressed = {},
         onPreviewClicked = {},
         onStartQuiz = {},
@@ -153,16 +185,21 @@ fun StartActivityScreen(
                             isPreview = false,
                             onPreviewClicked = onPreviewClicked,
                         )
-                        questions.forEach { question ->
-                            PreviewQuestionCard(
-                                questionText = question.questionText,
-                                optionsUiModel = question.optionUiModel,
-                                isMandatory = question.isMandatory,
-                                questionType = question.questionType,
-                                isPreview = false,
-                                answerKeyList = question.answerKeys,
-                                questionTotalMark = question.questionTotalMark,
-                            )
+                        LazyColumn {
+                            items(questions) { question ->
+                                PreviewQuestionCard(
+                                    questionText = question.questionText,
+                                    optionsUiModel = question.optionUiModel,
+                                    trueOrFalseUiModel = question.trueOrFalseUiModel,
+                                    isMandatory = question.isMandatory,
+                                    questionType = question.questionType,
+                                    isPreview = false,
+                                    answerKeyList = question.answerKeys,
+                                    questionTotalMark = question.questionTotalMark,
+                                    columnUiModel = question.columnUiModel,
+                                    rowUiModel = question.rowUiModel,
+                                )
+                            }
                         }
                     }
                 }

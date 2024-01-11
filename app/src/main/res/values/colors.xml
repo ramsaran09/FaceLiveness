@@ -37,4 +37,9 @@
     <color name="select_answer">#2AC00F</color>
     <color name="topbar_gradientcolor1">#6ac0fe</color>
     <color name="topbar_gradientcolor2">#388ee1</color>
+    <color name="buzz_txt_color_100">#6B7280</color>
+    <color name="grey_600">#757575</color>
+    <color name="colorGray">#9b9b9b</color>
+    <color name="text_disabled_color">#E5E7EB</color>
+
 </resources>

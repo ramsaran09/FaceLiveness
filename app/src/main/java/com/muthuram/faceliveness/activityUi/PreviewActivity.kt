@@ -43,8 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
-import com.muthuram.faceliveness.activity.MatchColumnUiModel
-import com.muthuram.faceliveness.activity.MatchRowUiModel
+import com.muthuram.faceliveness.activity.MatchAnswerUiModel
+import com.muthuram.faceliveness.activity.MatchQuestionUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
@@ -69,8 +69,8 @@ fun PreviewActivityScreenPreview() {
                 ),
                 questionTotalMark = 5,
                 trueOrFalseUiModel = listOf(),
-                rowUiModel = listOf(),
-                columnUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
+                matchAnswerUiModel = listOf(),
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -103,8 +103,8 @@ fun PreviewActivityScreenPreview() {
                 ),
                 questionTotalMark = 5,
                 trueOrFalseUiModel = listOf(),
-                rowUiModel = listOf(),
-                columnUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
+                matchAnswerUiModel = listOf(),
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -127,8 +127,8 @@ fun PreviewActivityScreenPreview() {
                         isAnswered = false,
                     )
                 ),
-                rowUiModel = listOf(),
-                columnUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
+                matchAnswerUiModel = listOf(),
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -138,46 +138,42 @@ fun PreviewActivityScreenPreview() {
                 optionUiModel = listOf(),
                 questionTotalMark = 5,
                 trueOrFalseUiModel = listOf(),
-                rowUiModel = listOf(
-                    MatchRowUiModel(
+                matchQuestionUiModel = listOf(
+                    MatchQuestionUiModel(
                         id = "",
                         text = "Chennai is capital of which state in India",
                         answerPosition = 0,
                     ),
-                    MatchRowUiModel(
+                    MatchQuestionUiModel(
                         id = "",
                         text = "Kochi",
                         answerPosition = 1,
                     ),
-                    MatchRowUiModel(
+                    MatchQuestionUiModel(
                         id = "",
                         text = "Mumbai",
                         answerPosition = 2,
                     ),
-                    MatchRowUiModel(
+                    MatchQuestionUiModel(
                         id = "",
                         text = "Bangalore",
                         answerPosition = 3,
                     ),
                 ),
-                columnUiModel = listOf(
-                    MatchColumnUiModel(
+                matchAnswerUiModel = listOf(
+                    MatchAnswerUiModel(
                         id = "",
                         text = "TamilNadu is highest producer of paddy",
-                        questionPosition = 0,
                     ),
-                    MatchColumnUiModel(
+                    MatchAnswerUiModel(
                         id = "",
                         text = "Kerala",
-                        questionPosition = 0,
-                    ),MatchColumnUiModel(
+                    ),MatchAnswerUiModel(
                         id = "",
                         text = "Maharashtra",
-                        questionPosition = 0,
-                    ),MatchColumnUiModel(
+                    ),MatchAnswerUiModel(
                         id = "",
                         text = "Karnataka",
-                        questionPosition = 0,
                     ),
                 ),
             ),
@@ -241,8 +237,8 @@ fun PreviewActivityScreen(
                             questionText = question.questionText,
                             optionsUiModel = question.optionUiModel,
                             trueOrFalseUiModel = question.trueOrFalseUiModel,
-                            rowUiModel = question.rowUiModel,
-                            columnUiModel = question.columnUiModel,
+                            matchQuestionUiModel = question.matchQuestionUiModel,
+                            matchAnswerUiModel = question.matchAnswerUiModel,
                             isMandatory = question.isMandatory,
                             questionType = question.questionType,
                             isPreview = true,
@@ -270,8 +266,8 @@ data class ActivityQuestionsUiModel(
     val questionType : ActivityQuestionType,
     val optionUiModel: List<OptionUiModel>,
     val trueOrFalseUiModel: List<TrueOrFalseUiModel>,
-    val rowUiModel: List<MatchRowUiModel>,
-    val columnUiModel: List<MatchColumnUiModel>,
+    val matchQuestionUiModel: List<MatchQuestionUiModel>,
+    val matchAnswerUiModel: List<MatchAnswerUiModel>,
     val isMandatory : Boolean,
     val answerKeys : ArrayList<String> = arrayListOf(),
     val questionTotalMark : Int,
@@ -327,9 +323,7 @@ fun PreviewQuizTitle(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTopBarReview() {
-    PreviewTopBar(
-        {},
-    )
+    PreviewTopBar {}
 }
 
 @Composable
@@ -401,8 +395,8 @@ fun PreviewQuestionCardPreview() {
         isPreview = false,
         answerKeyList = listOf(),
         questionTotalMark = 5,
-        rowUiModel = listOf(),
-        columnUiModel = listOf(),
+        matchQuestionUiModel = listOf(),
+        matchAnswerUiModel = listOf(),
     )
 }
 
@@ -411,8 +405,8 @@ fun PreviewQuestionCard(
     questionText: String,
     optionsUiModel : List<OptionUiModel>,
     trueOrFalseUiModel : List<TrueOrFalseUiModel>,
-    rowUiModel: List<MatchRowUiModel>,
-    columnUiModel: List<MatchColumnUiModel>,
+    matchQuestionUiModel: List<MatchQuestionUiModel>,
+    matchAnswerUiModel: List<MatchAnswerUiModel>,
     isMandatory : Boolean,
     questionType: ActivityQuestionType,
     isPreview : Boolean,
@@ -507,9 +501,9 @@ fun PreviewQuestionCard(
                 }
                 ActivityQuestionType.MATCH -> {
                     MatchingQuestionView(
-                        rowUiModel = rowUiModel,
-                        columnUiModel = columnUiModel,
-                        isPreview = true,
+                        matchQuestionUiModel = matchQuestionUiModel,
+                        matchAnswerUiModel = matchAnswerUiModel,
+                        isPreview = isPreview,
                     )
                 }
                 else -> {
@@ -588,23 +582,23 @@ fun PreviewQuestionCard(
 @Composable
 fun MatchingQuestionViewPreview() {
     MatchingQuestionView(
-        rowUiModel = listOf(
-            MatchRowUiModel(
+        matchQuestionUiModel = listOf(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Chennai is capital of which state in India",
                 answerPosition = 0,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Kochi",
                 answerPosition = 1,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Mumbai",
                 answerPosition = 2,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Bangalore",
                 answerPosition = 3,
@@ -612,33 +606,29 @@ fun MatchingQuestionViewPreview() {
 
 
         ),
-        columnUiModel = listOf(
-            MatchColumnUiModel(
+        matchAnswerUiModel = listOf(
+            MatchAnswerUiModel(
                 id = "",
                 text = "TamilNadu is highest producer of paddy",
-                questionPosition = 0,
             ),
-            MatchColumnUiModel(
+            MatchAnswerUiModel(
                 id = "",
                 text = "Kerala",
-                questionPosition = 0,
-            ),MatchColumnUiModel(
+            ),MatchAnswerUiModel(
                 id = "",
                 text = "Maharashtra",
-                questionPosition = 0,
-            ),MatchColumnUiModel(
+            ),MatchAnswerUiModel(
                 id = "",
                 text = "Karnataka",
-                questionPosition = 0,
             ),
         ),
-        isPreview = true,
+        isPreview = false,
     )
 }
 @Composable
 fun MatchingQuestionView(
-    rowUiModel: List<MatchRowUiModel>,
-    columnUiModel: List<MatchColumnUiModel>,
+    matchQuestionUiModel: List<MatchQuestionUiModel>,
+    matchAnswerUiModel: List<MatchAnswerUiModel>,
     isPreview: Boolean,
 ) {
     val radioButtonColors = RadioButtonDefaults.colors(
@@ -656,7 +646,7 @@ fun MatchingQuestionView(
             Row(
                 modifier = Modifier.horizontalScroll(scrollState),
             ) {
-                columnUiModel.forEach {
+                matchAnswerUiModel.forEach {
                     Text(
                         modifier = Modifier
                             .width(100.dp)
@@ -671,7 +661,7 @@ fun MatchingQuestionView(
                 }
             }
         }
-        rowUiModel.forEachIndexed { _, matchRowUiModel ->
+        matchQuestionUiModel.forEachIndexed { _, matchRowUiModel ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -698,7 +688,7 @@ fun MatchingQuestionView(
                         .fillMaxWidth()
                         .horizontalScroll(scrollState),
                 ) {
-                    columnUiModel.forEachIndexed { index, _ ->
+                    matchAnswerUiModel.forEachIndexed { index, _ ->
                         Spacer(modifier = Modifier.padding(4.dp))
                         RadioButton(
                             modifier = Modifier

@@ -50,10 +50,11 @@ data class ActivityNewQuestionsUiModel(
     val isMandatory: Boolean,
     val options: List<OptionUiModel>,
     val trueOrFalseUiModel: List<TrueOrFalseUiModel>,
-    val rowUiModel: List<MatchRowUiModel>,
-    val columnUiModel: List<MatchColumnUiModel>,
+    val matchQuestionUiModels: List<MatchQuestionUiModel>,
+    val matchAnswerUiModels: List<MatchAnswerUiModel>,
     val characterCount: Int,
     val questionType: ActivityQuestionType,
+    val selectedQuestionType : Int = -1,
 )
 
 data class OptionUiModel(
@@ -91,14 +92,19 @@ data class TrueOrFalseUiModel(
     val isAnswered : Boolean,
 )
 
-data class MatchRowUiModel(
+data class MatchQuestionUiModel(
     val id : String,
     val text : String,
     val answerPosition : Int? = null,
 )
 
-data class MatchColumnUiModel(
+data class MatchAnswerUiModel(
     val id : String,
     val text : String,
-    val questionPosition : Int?,
+)
+
+data class StudentGroupUiModel(
+    val id : String,
+    val studentGroupText : String,
+    var isSelected : Boolean,
 )

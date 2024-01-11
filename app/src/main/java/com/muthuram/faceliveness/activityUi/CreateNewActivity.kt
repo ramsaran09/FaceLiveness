@@ -13,12 +13,12 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.muthuram.faceliveness.R
 import com.muthuram.faceliveness.activity.ActivityNewQuestionsUiModel
-import com.muthuram.faceliveness.activity.OptionUiModel
+import com.muthuram.faceliveness.activity.StudentGroupUiModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -44,9 +45,24 @@ fun CreateActivityScreen(
     onPublish: () -> Unit,
     onEditClick: () -> Unit,
     onPreviewClicked: () -> Unit,
+    questionTypeList : List<String>,
     activityQuestionList : ArrayList<ActivityNewQuestionsUiModel>,
-    questionType: ActivityQuestionType,
-    onQuestionTypeClicked: () -> Unit,
+    startDate : String,
+    endDate : String,
+    startTime : String,
+    endTime : String,
+    sessions : List<String>,
+    studentGroupList : List<StudentGroupUiModel>,
+    selectedSessionName : String,
+    onStartDateSelected : (String) -> Unit,
+    onStartTimeSelected : (String) -> Unit,
+    onEndDateSelected : (String) -> Unit,
+    onEndTimeSelected : (String) -> Unit,
+    onSessionSelected : (Int) -> Unit,
+    onStudentGroupSelected : (Int,Boolean) -> Unit,
+    onSaveClicked : () -> Unit,
+    onSaveSelectedStudentGroup : () -> Unit,
+    onQuestionTypeSelected: (Int) -> Unit,
     onQuestionEntered: (String) -> Unit,
     onTotalMarkEntered: (String) -> Unit,
     onAnswerKeyAndFeedbackClicked: () -> Unit,
@@ -66,14 +82,50 @@ fun CreateActivityScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val snackState = remember { SnackbarHostState() }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val isQuestionTypeChange = remember { mutableStateOf(false) }
+    val isQuestionTypeChange = remember { mutableIntStateOf(-1) }
+    val isScheduleActivity = remember { mutableStateOf(false) }
     ModalBottomSheetLayout(
         sheetContent = {
-            if (isQuestionTypeChange.value) {
-
+            if (isQuestionTypeChange.intValue >= 0) {
+                QuestionTypeBottomSheet(
+                    questionTypeList = questionTypeList,
+                    selectedQuestionType = activityQuestionList[isQuestionTypeChange.intValue].selectedQuestionType,
+                    onCloseClicked = {
+                        scope.launch {
+                            sheetState.hide()
+                            isQuestionTypeChange.intValue = -1
+                        }
+                    },
+                    onQuestionTypeSelected = onQuestionTypeSelected,
+                )
             }
+            if (isScheduleActivity.value) {
+                ScheduleActivityBottomSheet(
+                    startDate  = startDate,
+                    endDate  = endDate,
+                    startTime  = startTime,
+                    endTime  = endTime,
+                    sessions  = sessions,
+                    studentGroupList  = studentGroupList,
+                    selectedSessionName  = selectedSessionName,
+                    onStartDateSelected  = onStartDateSelected,
+                    onStartTimeSelected  = onStartTimeSelected,
+                    onEndDateSelected  = onEndDateSelected,
+                    onEndTimeSelected  = onEndTimeSelected,
+                    onSessionSelected  = onSessionSelected,
+                    onStudentGroupSelected  = onStudentGroupSelected,
+                    onCancelClicked  = {
+                        scope.launch {
+                            sheetState.hide()
+                            isScheduleActivity.value = false
+                        }
+                    },
+                    onSaveClicked  = onSaveClicked,
+                    onSaveSelectedStudentGroup = onSaveSelectedStudentGroup,
+                )
+            }
+            
         },
         sheetState = sheetState,
         scrimColor = Color.Black.copy(alpha = 0.5f),
@@ -156,8 +208,8 @@ fun CreateActivityScreen(
                                         onDeleteClicked = { /*TODO*/ },
                                         onMoreClicked = {},
                                         onAddOptions = {},
-                                        rowUiModel = item.rowUiModel,
-                                        columnUiModel = item.columnUiModel,
+                                        matchQuestionUiModel = item.matchQuestionUiModels,
+                                        matchAnswerUiModel = item.matchAnswerUiModels,
                                     )
                                     /*QuestionsItem(
                                         QuestionPos = index,

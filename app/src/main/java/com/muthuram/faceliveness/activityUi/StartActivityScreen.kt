@@ -26,6 +26,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.muthuram.faceliveness.R
+import com.muthuram.faceliveness.activity.MatchAnswerUiModel
+import com.muthuram.faceliveness.activity.MatchQuestionUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
@@ -50,8 +52,8 @@ fun StartActivityScreenPreview() {
                 ),
                 questionTotalMark = 5,
                 trueOrFalseUiModel = listOf(),
-                rowUiModel = listOf(),
-                columnUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
+                matchAnswerUiModel = listOf(),
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -86,8 +88,8 @@ fun StartActivityScreenPreview() {
                 ),
                 questionTotalMark = 5,
                 trueOrFalseUiModel = listOf(),
-                rowUiModel = listOf(),
-                columnUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
+                matchAnswerUiModel = listOf(),
             ),
             ActivityQuestionsUiModel(
                 id = "",
@@ -110,8 +112,57 @@ fun StartActivityScreenPreview() {
                         isAnswered = false,
                     ),
                 ),
-                rowUiModel = listOf(),
-                columnUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
+                matchAnswerUiModel = listOf(),
+            ),
+            ActivityQuestionsUiModel(
+                id = "",
+                questionText = "which of the following is capital of TamilNadu?",
+                questionType = ActivityQuestionType.MATCH,
+                isMandatory = true,
+                optionUiModel = listOf(),
+                questionTotalMark = 5,
+                trueOrFalseUiModel = listOf(),
+                matchQuestionUiModel = listOf(
+                    MatchQuestionUiModel(
+                        id = "",
+                        text = "Chennai is capital of which state in India",
+                        answerPosition = 3,
+                    ),
+                    MatchQuestionUiModel(
+                        id = "",
+                        text = "Kochi",
+                        answerPosition = 2,
+                    ),
+                    MatchQuestionUiModel(
+                        id = "",
+                        text = "Mumbai",
+                        answerPosition = 1,
+                    ),
+                    MatchQuestionUiModel(
+                        id = "",
+                        text = "Bangalore",
+                        answerPosition = 0,
+                    ),
+                ),
+                matchAnswerUiModel = listOf(
+                    MatchAnswerUiModel(
+                        id = "",
+                        text = "TamilNadu is highest producer of paddy",
+                    ),
+                    MatchAnswerUiModel(
+                        id = "",
+                        text = "Kerala",
+                    ),
+                    MatchAnswerUiModel(
+                        id = "",
+                        text = "Maharashtra",
+                    ),
+                    MatchAnswerUiModel(
+                        id = "",
+                        text = "Karnataka",
+                    ),
+                ),
             ),
         ),
         onBackPressed = {},
@@ -196,8 +247,8 @@ fun StartActivityScreen(
                                     isPreview = false,
                                     answerKeyList = question.answerKeys,
                                     questionTotalMark = question.questionTotalMark,
-                                    columnUiModel = question.columnUiModel,
-                                    rowUiModel = question.rowUiModel,
+                                    matchAnswerUiModel = question.matchAnswerUiModel,
+                                    matchQuestionUiModel = question.matchQuestionUiModel,
                                 )
                             }
                         }

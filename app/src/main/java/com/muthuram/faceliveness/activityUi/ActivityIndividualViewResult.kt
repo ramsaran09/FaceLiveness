@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
-import com.muthuram.faceliveness.activity.MatchRowUiModel
+import com.muthuram.faceliveness.activity.MatchQuestionUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
@@ -200,7 +200,7 @@ fun IndividualQuestionCardPreview() {
         optionsUiModel = listOf(),
         trueOrFalseUiModel = listOf(),
         questionType = ActivityQuestionType.SHORT_ANSWER,
-        rowUiModel = listOf(),
+        matchQuestionUiModel = listOf(),
     )
 }
 
@@ -248,23 +248,23 @@ fun IndividualMCQQuestionCardPreview() {
             ),
         ),
         questionType = ActivityQuestionType.MATCH,
-        rowUiModel = listOf(
-            MatchRowUiModel(
+        matchQuestionUiModel = listOf(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Chennai is capital of which state in India",
                 answerPosition = 3,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Kochi",
                 answerPosition = 2,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Mumbai",
                 answerPosition = 1,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Bangalore",
                 answerPosition = 0,
@@ -282,7 +282,7 @@ fun IndividualQuestionCard(
     totalQuestionMark: Int,
     optionsUiModel: List<OptionUiModel>,
     trueOrFalseUiModel: List<TrueOrFalseUiModel>,
-    rowUiModel: List<MatchRowUiModel>,
+    matchQuestionUiModel: List<MatchQuestionUiModel>,
     questionType: ActivityQuestionType,
 ) {
     Card(
@@ -321,12 +321,12 @@ fun IndividualQuestionCard(
                     }
                 }
                 ActivityQuestionType.MATCH -> {
-                    rowUiModel.forEachIndexed { index, matchRowUiModel ->
+                    matchQuestionUiModel.forEachIndexed { index, questionUiModel ->
                         MatchQuestionResultView(
                             index = index,
-                            text = matchRowUiModel.text,
+                            text = questionUiModel.text,
                             isCorrectingAnswer = false,
-                            answerPosition = matchRowUiModel.answerPosition,
+                            answerPosition = questionUiModel.answerPosition,
                         )
                     }
                 }

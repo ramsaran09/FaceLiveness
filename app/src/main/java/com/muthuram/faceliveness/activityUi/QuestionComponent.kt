@@ -60,8 +60,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
-import com.muthuram.faceliveness.activity.MatchColumnUiModel
-import com.muthuram.faceliveness.activity.MatchRowUiModel
+import com.muthuram.faceliveness.activity.MatchAnswerUiModel
+import com.muthuram.faceliveness.activity.MatchQuestionUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
@@ -114,48 +114,44 @@ fun ActivityItemCardPreview() {
                 isAnswered = false,
             ),
         ),
-        rowUiModel = listOf(
-            MatchRowUiModel(
+        matchQuestionUiModel = listOf(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Chennai",
                 answerPosition = null,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Mumbai",
                 answerPosition = null,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Bangalore",
                 answerPosition = null,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Kochi",
                 answerPosition = null,
             ),
         ),
-        columnUiModel = listOf(
-            MatchColumnUiModel(
+        matchAnswerUiModel = listOf(
+            MatchAnswerUiModel(
                 id = "",
                 text = "TN",
-                questionPosition = null,
             ),
-            MatchColumnUiModel(
+            MatchAnswerUiModel(
                 id = "",
                 text = "Maharashtra",
-                questionPosition = null,
             ),
-            MatchColumnUiModel(
+            MatchAnswerUiModel(
                 id = "",
                 text = "Kerala",
-                questionPosition = null,
             ),
-            MatchColumnUiModel(
+            MatchAnswerUiModel(
                 id = "",
                 text = "Karantaka",
-                questionPosition = null,
             ),
         ),
         deleteOption = {  },
@@ -188,8 +184,8 @@ fun ActivityItemCard(
     isMandatory: Boolean,
     options: List<OptionUiModel>,
     trueOrFalseList: List<TrueOrFalseUiModel>,
-    rowUiModel: List<MatchRowUiModel>,
-    columnUiModel: List<MatchColumnUiModel>,
+    matchQuestionUiModel: List<MatchQuestionUiModel>,
+    matchAnswerUiModel: List<MatchAnswerUiModel>,
     characterCount: Int,
     onDragHandleClicked: () -> Unit,
     questionType: ActivityQuestionType,
@@ -270,7 +266,7 @@ fun ActivityItemCard(
                         fontWeight = FontWeight(500),
                         color = Color(0xFF374151),
                     )
-                    rowUiModel.forEachIndexed { index, matchRowUiModel ->
+                    matchQuestionUiModel.forEachIndexed { index, matchRowUiModel ->
                         ActivityMatchOptionsAnswer(
                             optionsPos = index,
                             optionText = matchRowUiModel.text,
@@ -288,10 +284,10 @@ fun ActivityItemCard(
                         fontWeight = FontWeight(500),
                         color = Color(0xFF374151),
                     )
-                    columnUiModel.forEachIndexed { index, matchColumnUiModel ->
+                    matchAnswerUiModel.forEachIndexed { index, answerUiModel ->
                         ActivityMatchOptionsAnswer(
                             optionsPos = index,
-                            optionText = matchColumnUiModel.text,
+                            optionText = answerUiModel.text,
                             deleteOption = deleteOption,
                             onOptionTextChanged = onOptionTextChanged,
                             isColumn = true,

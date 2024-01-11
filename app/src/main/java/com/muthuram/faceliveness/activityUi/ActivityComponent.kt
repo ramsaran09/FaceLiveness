@@ -76,8 +76,8 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
-import com.muthuram.faceliveness.activity.MatchColumnUiModel
-import com.muthuram.faceliveness.activity.MatchRowUiModel
+import com.muthuram.faceliveness.activity.MatchAnswerUiModel
+import com.muthuram.faceliveness.activity.MatchQuestionUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.activity.OutcomeUiModel
 import com.muthuram.faceliveness.activity.SessionUiModel
@@ -1613,20 +1613,17 @@ fun ChooseAnswerForMCQ(
 @Composable
 fun SelectMatchingAnswerAlertDialogPreview() {
     SelectMatchingAnswerAlertDialog(
-        columnUiModel = listOf(
-            MatchColumnUiModel(
+        matchAnswerUiModel = listOf(
+            MatchAnswerUiModel(
                 id = "",
                 text = "TamilNadu",
-                questionPosition = null,
             ),
-            MatchColumnUiModel(
+            MatchAnswerUiModel(
                 id = "",
                 text = "Karnataka",
-                questionPosition = null,
-            ),MatchColumnUiModel(
+            ),MatchAnswerUiModel(
                 id = "",
                 text = "Kerala",
-                questionPosition = null,
             ),
         ),
         onAnswerSelected = {},
@@ -1634,7 +1631,7 @@ fun SelectMatchingAnswerAlertDialogPreview() {
 }
 @Composable
 fun SelectMatchingAnswerAlertDialog(
-    columnUiModel: List<MatchColumnUiModel>,
+    matchAnswerUiModel: List<MatchAnswerUiModel>,
     onAnswerSelected : (Int) -> Unit,
 ) {
     Card(
@@ -1654,7 +1651,7 @@ fun SelectMatchingAnswerAlertDialog(
                 color = Color(0xFF374151),
             )
             Divider()
-            columnUiModel.forEachIndexed { index, matchColumnUiModel ->
+            matchAnswerUiModel.forEachIndexed { index, matchmatchAnswerUiModel ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1671,7 +1668,7 @@ fun SelectMatchingAnswerAlertDialog(
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
                     Text(
-                        text = matchColumnUiModel.text,
+                        text = matchmatchAnswerUiModel.text,
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.roboto_regular)),
                         fontWeight = FontWeight(400),
@@ -1689,18 +1686,18 @@ fun SelectMatchingAnswerAlertDialog(
 fun ChooseAnswerForMatchPreview() {
     ChooseAnswerForMatch(
         questionText = "Differentiate active and passive transport mechanism across cell membrane",
-        rowUiModel = listOf(
-            MatchRowUiModel(
+        matchQuestionUiModel = listOf(
+            MatchQuestionUiModel(
                 id ="",
                 text = "Chennai",
                 answerPosition = 2,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id ="",
                 text = "Bangalore",
                 answerPosition = 1,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id ="",
                 text = "Mumbai",
                 answerPosition = null,
@@ -1715,7 +1712,7 @@ fun ChooseAnswerForMatchPreview() {
 @Composable
 fun ChooseAnswerForMatch(
     questionText : String,
-    rowUiModel: List<MatchRowUiModel>,
+    matchQuestionUiModel: List<MatchQuestionUiModel>,
     onChooseAnswerForMatch : (Int) -> Unit,
     isNonEdit: Boolean,
     onEditClicked: () -> Unit,
@@ -1740,7 +1737,7 @@ fun ChooseAnswerForMatch(
             color = Color(0xFF4B5563),
         )
         Spacer(modifier = Modifier.padding(4.dp))
-        rowUiModel.forEachIndexed { index, matchRowUiModel ->
+        matchQuestionUiModel.forEachIndexed { index, matchmatchQuestionUiModel ->
             Row(
                 modifier = Modifier
                     .padding(top = 8.dp),
@@ -1757,7 +1754,7 @@ fun ChooseAnswerForMatch(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = matchRowUiModel.text,
+                    text = matchmatchQuestionUiModel.text,
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.roboto_regular)),
                     fontWeight = FontWeight(400),
@@ -1765,7 +1762,7 @@ fun ChooseAnswerForMatch(
                 )
                 MatchAnswerView(
                     color = 0xFFFFFFFF,
-                    answerPosition = matchRowUiModel.answerPosition,
+                    answerPosition = matchmatchQuestionUiModel.answerPosition,
                     onChooseMatchAnswer = {
                         onChooseAnswerForMatch(index)
                     },
@@ -1911,7 +1908,9 @@ fun QuestionTypeBottomSheetPreview() {
     QuestionTypeBottomSheet(
         questionTypeList = listOf(
             "Short Answer",
-            "Multiple Choice"
+            "Multiple Choice",
+            "Matching",
+            "True Or False"
         ),
         onCloseClicked = {},
         onQuestionTypeSelected = {},

@@ -47,7 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
-import com.muthuram.faceliveness.activity.MatchRowUiModel
+import com.muthuram.faceliveness.activity.MatchQuestionUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 
@@ -187,23 +187,23 @@ fun ActivityCorrectionQuestionCardPreview() {
                 isAnswered = false,
             ),
         ),
-        rowUiModel = listOf(
-            MatchRowUiModel(
+        matchQuestionUiModel = listOf(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Chennai is capital of which state in India",
                 answerPosition = 0,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Kochi",
                 answerPosition = 1,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Mumbai",
                 answerPosition = 2,
             ),
-            MatchRowUiModel(
+            MatchQuestionUiModel(
                 id = "",
                 text = "Bangalore",
                 answerPosition = 3,
@@ -233,7 +233,7 @@ fun ActivityCorrectionQuestionCard(
     questionTotalMark: Int,
     optionsUiModel: List<OptionUiModel>,
     trueOrFalseUiModel: List<TrueOrFalseUiModel>,
-    rowUiModel: List<MatchRowUiModel>,
+    matchQuestionUiModel: List<MatchQuestionUiModel>,
     onExpandChanged: (Boolean) -> Unit,
     onQuestionCorrected: (Boolean) -> Unit,
 ) {
@@ -343,12 +343,12 @@ fun ActivityCorrectionQuestionCard(
                         Spacer(modifier = Modifier.padding(8.dp))
                     }
                     ActivityQuestionType.MATCH -> {
-                        rowUiModel.forEachIndexed { index, matchRowUiModel ->
+                        matchQuestionUiModel.forEachIndexed { index, questionUiModel ->
                             MatchQuestionResultView(
                                 index = index,
                                 isCorrectingAnswer = true,
-                                text = matchRowUiModel.text,
-                                answerPosition = matchRowUiModel.answerPosition,
+                                text = questionUiModel.text,
+                                answerPosition = questionUiModel.answerPosition,
                             )
                         }
                         Spacer(modifier = Modifier.padding(8.dp))

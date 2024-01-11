@@ -53,7 +53,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.muthuram.faceliveness.R
-import com.muthuram.faceliveness.activity.MatchRowUiModel
+import com.muthuram.faceliveness.activity.MatchQuestionUiModel
 import com.muthuram.faceliveness.activity.OptionUiModel
 import com.muthuram.faceliveness.activity.TrueOrFalseUiModel
 import com.muthuram.faceliveness.models.ActivityDonutChartData
@@ -174,7 +174,7 @@ fun ActivityResultSummaryScreenPreview() {
                 ),
                 questionType = ActivityQuestionType.MCQ,
                 trueOrFalseUiModel = listOf(),
-                rowUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
             ),
             IndividualActivityResultUiModel(
                 id = "",
@@ -205,7 +205,7 @@ fun ActivityResultSummaryScreenPreview() {
                 ),
                 questionType = ActivityQuestionType.MCQ,
                 trueOrFalseUiModel = listOf(),
-                rowUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
             ),
             IndividualActivityResultUiModel(
                 id = "",
@@ -217,7 +217,7 @@ fun ActivityResultSummaryScreenPreview() {
                 optionsUiModel = listOf(),
                 trueOrFalseUiModel = listOf(),
                 questionType = ActivityQuestionType.SHORT_ANSWER,
-                rowUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
             ),
             IndividualActivityResultUiModel(
                 id = "",
@@ -229,7 +229,7 @@ fun ActivityResultSummaryScreenPreview() {
                 optionsUiModel = listOf(),
                 trueOrFalseUiModel = listOf(),
                 questionType = ActivityQuestionType.SHORT_ANSWER,
-                rowUiModel = listOf(),
+                matchQuestionUiModel = listOf(),
             ),
         )
     )
@@ -326,7 +326,7 @@ fun ActivityResultSummaryScreen(
                                     optionsUiModel = item.optionsUiModel,
                                     trueOrFalseUiModel = item.trueOrFalseUiModel,
                                     questionType = item.questionType,
-                                    rowUiModel = item.rowUiModel,
+                                    matchQuestionUiModel = item.matchQuestionUiModel,
                                 )
                             }
                         }
@@ -646,7 +646,7 @@ data class IndividualActivityResultUiModel(
     val scoredMark: Int,
     val optionsUiModel: List<OptionUiModel>,
     val trueOrFalseUiModel: List<TrueOrFalseUiModel>,
-    val rowUiModel: List<MatchRowUiModel>,
+    val matchQuestionUiModel: List<MatchQuestionUiModel>,
 )
 
 @Preview(showBackground = true)
